@@ -1,0 +1,38 @@
+---
+import { buttonVariants } from "@/components/ui/button"
+import HeaderSheet from "@/components/HeaderSheet";
+import { SITE_TITLE } from "@/consts";
+import { navigate } from "astro:transitions/client";
+
+const navigation = {
+    main: [
+        { name: "ホーム", href: "/" },
+        { name: `『${SITE_TITLE}』について`, href: "/about" },
+        { name: "記事一覧", href: "/blog" },
+    ],
+};
+---
+
+<header class="py-2 border-b bg-background sticky top-0 z-50 shadow">
+    <nav class="container flex justify-between items-center">
+        <a
+            href="/"
+            class="font-[Klee_One] text-3xl font-bold tracking-wide text-foreground/80"
+        >
+            珈術
+        </a>
+        <div class="hidden sm:flex items-center gap-x-1">
+            {
+                navigation.main.map((item) => (
+                    <a
+                        href={item.href}
+                        class={buttonVariants({ variant: "ghost" })}
+                    >
+                        {item.name}
+                    </a>
+                ))
+            }
+        </div>
+        <HeaderSheet navigation={navigation.main} client:only="react" />
+    </nav>
+</header>

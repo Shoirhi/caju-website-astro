@@ -1,0 +1,71 @@
+---
+import FormattedDate from "@/components/FormattedDate.astro";
+import type { CollectionEntry } from "astro:content";
+
+import imageBlogDefault from "@/assets/blog-default.jpg";
+
+interface Props {
+    posts: CollectionEntry<"blog">[];
+    pagination?: {
+        currentPage: number;
+        lastPage: number;
+        url: {
+            prev?: string;
+            next?: string;
+        };
+    };
+}
+
+const { posts, pagination } = Astro.props;
+---
+
+{
+    posts?.length > 0 ? (
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-20">
+            {posts.map((post) => (
+                <article>
+                    <a href={`/blog/${post.id}`} class="block group">
+                        <div transition:name={`blogImage-${post.id}`} class="relative w-full">
+                            <img
+                                alt=""
+                                src={
+                                    post.data.image
+                                        ? post.data.image.url
+                                        : imageBlogDefault
+                                }
+                                class="aspect-video w-full rounded-2xl bg-secondary object-cover"
+                            />
+                            <div class="absolute inset-0 rounded-2xl inset-ring inset-ring-zinc-900/10" />
+                        </div>
+                        <div class="flex max-w-xl grow flex-col justify-between">
+                            <div class="mt-6 flex items-center flex-wrap gap-x-4 gap-y-1 text-xs">
+                                <div transition:name={`blogDate-${post.id}`}>
+                                    <FormattedDate
+                                        date={new Date(post.data.publishedAt)}
+                                        class="text-foreground/80"
+                                    />
+                                </div>
+                                {post.data.tags.map((tag: { name: string }) => (
+                                    <p
+                                        transition:name={`blogTag-${post.id}-${tag.name}`}
+                                        class="relative z-10 rounded-full bg-accent px-3 py-1.5 font-medium text-accent-foreground"
+                                    >
+                                        {tag.name}
+                                    </p>
+                                ))}
+                            </div>
+                            <h3
+                                transition:name={`blogTitle-${post.id}`}
+                                class="mt-3 text-lg/6 font-semibold  group-hover:underline"
+                            >
+                                {post.data.title}
+                            </h3>
+                        </div>
+                    </a>
+                </article>
+            ))}
+        </div>
+    ) : (
+        <p>まだ記事は公開されていません。</p>
+    )
+}

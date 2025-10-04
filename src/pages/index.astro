@@ -1,16 +1,20 @@
 ---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import BlogList from "@/components/BlogList.astro";
+import { getCollection } from "astro:content";
 
+const blogList = (await getCollection("blog"))
+    .sort(
+        (a, b) =>
+            new Date(b.data.publishedAt).getTime() -
+            new Date(a.data.publishedAt).getTime(),
+    )
+    .slice(0, 6);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout>
+    <section class="container py-20">
+        <h2 class="text-2xl font-medium mb-6 mt-15">最新の記事</h2>
+        <BlogList posts={blogList} />
+    </section>
+</BaseLayout>

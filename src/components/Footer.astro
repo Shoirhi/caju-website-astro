@@ -1,0 +1,40 @@
+---
+import { buttonVariants } from "@/components/ui/button"
+import { SITE_TITLE } from "@/consts";
+import { cn } from "@/lib/utils";
+
+const navigation = {
+    main: [
+        { name: "ホーム", href: "/" },
+        { name: `『${SITE_TITLE}』について`, href: "/about" },
+        { name: "記事一覧", href: "/blog" },
+    ],
+};
+---
+
+<footer class="sticky top-full container">
+    <div class="pt-16 border-t">
+        <div class="font-[Klee_One] text-center">
+            <p class="text-foreground/70">香りを言葉に、技術を記録に<br/>世界大会を目指すバリスタノート</p>
+            <p class="text-7xl font-bold text-foreground/50 mt-5 tracking-widest">珈術</p>
+        </div>
+        <nav
+            aria-label="Footer"
+            class="flex mt-16 justify-center item-center flex-wrap gap-x-1 gap-y-1"
+        >
+            {
+                navigation.main.map((item) => (
+                    <a
+                        href={item.href}
+                        class={cn(buttonVariants({ variant: "link" }))}
+                    >
+                        {item.name}
+                    </a>
+                ))
+            }
+        </nav>
+        <p class="mt-16 pb-6 text-center text-xs/6 text-foreground/70">
+            &copy; {new Date().getFullYear()} {SITE_TITLE}, Inc. All rights reserved.
+        </p>
+    </div>
+</footer>

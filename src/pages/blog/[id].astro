@@ -1,0 +1,61 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import FormattedDate from "@/components/FormattedDate.astro";
+import { getCollection } from "astro:content";
+
+import imageBlogDefault from "@/assets/blog-default.jpg";
+
+export async function getStaticPaths() {
+    const posts = await getCollection("blog");
+
+    return posts.map((post) => ({
+        params: { id: post.id },
+        props: { post },
+    }));
+}
+
+const { post } = Astro.props;
+---
+
+<BaseLayout title={post.data.title} description={post.data.description}>
+    <article class="prose prose-stone container py-20">
+        <div
+            transition:name={`blogImage-${post.id}`}
+            class="not-prose relative w-full"
+        >
+            <img
+                alt=""
+                src={post.data.image ? post.data.image.url : imageBlogDefault}
+                class="aspect-video w-full rounded-2xl bg-secondary object-cover"
+            />
+            <div
+                class="absolute inset-0 rounded-2xl inset-ring inset-ring-zinc-900/10"
+            >
+            </div>
+        </div>
+        <div
+            class="not-prose mt-6 flex items-center flex-wrap gap-x-4 gap-y-1 text-xs"
+        >
+            <div transition:name={`blogDate-${post.id}`}>
+                <FormattedDate
+                    date={new Date(post.data.publishedAt)}
+                    class="text-foreground/80"
+                />
+            </div>
+            {
+                post.data.tags.map((tag: { name: string }) => (
+                    <p
+                        transition:name={`blogTag-${post.id}-${tag.name}`}
+                        class="relative z-10 rounded-full bg-accent px-3 py-1.5 font-medium text-accent-foreground"
+                    >
+                        {tag.name}
+                    </p>
+                ))
+            }
+        </div>
+        <h1 transition:name={`blogTitle-${post.id}`} class="mt-15">
+            {post.data.title}
+        </h1>
+        <div set:html={post.data.content} />
+    </article>
+</BaseLayout>
