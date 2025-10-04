@@ -1,13 +1,10 @@
 ---
 import { buttonVariants } from "@/components/ui/button"
 import HeaderSheet from "@/components/HeaderSheet";
-import { SITE_TITLE } from "@/consts";
-import { navigate } from "astro:transitions/client";
 
 const navigation = {
     main: [
         { name: "ホーム", href: "/" },
-        { name: `『${SITE_TITLE}』について`, href: "/about" },
         { name: "記事一覧", href: "/blog" },
     ],
 };
